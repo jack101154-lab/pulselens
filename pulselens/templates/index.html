@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PulseLens</title>
+    <link rel="stylesheet" href="/static/app.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Public opinion early warning</p>
+        <h1>PulseLens</h1>
+      </div>
+      <a class="button" href="/export/mentions.csv">Export CSV</a>
+    </header>
+
+    <main>
+      <section class="metrics" aria-label="Overview">
+        <article>
+          <span>Total mentions</span>
+          <strong id="totalMentions">0</strong>
+        </article>
+        <article>
+          <span>High alerts</span>
+          <strong id="highAlerts">0</strong>
+        </article>
+        <article>
+          <span>Average risk</span>
+          <strong id="averageRisk">0</strong>
+        </article>
+      </section>
+
+      <section class="layout">
+        <aside class="panel">
+          <div class="section-title">
+            <h2>Watched entities</h2>
+          </div>
+          <div id="entities" class="entity-list"></div>
+        </aside>
+
+        <section class="panel">
+          <div class="section-title">
+            <h2>Priority mentions</h2>
+            <select id="entityFilter" aria-label="Filter by entity">
+              <option value="">All entities</option>
+            </select>
+          </div>
+          <div id="mentions" class="mention-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

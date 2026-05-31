@@ -1,0 +1,5 @@
+source,author,published_at,reach,text,url
+x,@cloudwatcher,2026-05-26T08:00:00Z,12000,"Acme Cloud billing is broken and support has ignored our complaint for days.",https://example.com/post/1
+reddit,u/researcher,2026-05-26T09:10:00Z,8500,"Acme Cloud published a transparent incident report. This is helpful and improved trust.",https://example.com/post/2
+press,Daily Tech,2026-05-26T10:30:00Z,55000,"Breaking: customers report unsafe data leak concerns around Acme Cloud.",https://example.com/post/3
+survey,anonymous,2026-05-26T11:00:00Z,25,"The product is fast and reliable, but the new pricing feels expensive.",https://example.com/post/4

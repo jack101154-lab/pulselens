@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pulselens"
+version = "0.1.0"
+description = "Open-source social listening and public-opinion early-warning workbench."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "PulseLens Contributors" }]
+keywords = [
+  "social-listening",
+  "public-opinion",
+  "sentiment-analysis",
+  "crisis-monitoring",
+  "reputation",
+  "osint"
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Web Environment",
+  "Intended Audience :: End Users/Desktop",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Communications",
+  "Topic :: Scientific/Engineering :: Information Analysis"
+]
+dependencies = []
+
+[project.scripts]
+pulselens = "pulselens.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["pulselens*"]
+
+[tool.setuptools.package-data]
+pulselens = ["templates/*.html", "static/*.css", "static/*.js"]

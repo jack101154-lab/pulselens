@@ -1,6 +1,6 @@
 import unittest
 
-from pulselens.analyzer import analyze, risk_level
+from pulselens.analyzer import analyze, risk_level, risk_type
 
 
 class AnalyzerTest(unittest.TestCase):
@@ -19,13 +19,24 @@ class AnalyzerTest(unittest.TestCase):
         self.assertLess(result.sentiment, 0)
         self.assertGreaterEqual(result.risk_score, 60)
         self.assertIn(result.strategy, {"de-escalate", "crisis-response"})
+        self.assertIn(result.risk_level, {"L3", "L4", "L5"})
 
     def test_risk_level_boundaries(self):
-        self.assertEqual(risk_level(0), "low")
-        self.assertEqual(risk_level(20), "guarded")
-        self.assertEqual(risk_level(40), "elevated")
-        self.assertEqual(risk_level(60), "high")
-        self.assertEqual(risk_level(80), "critical")
+        self.assertEqual(risk_level(0), "L0")
+        self.assertEqual(risk_level(21), "L1")
+        self.assertEqual(risk_level(41), "L2")
+        self.assertEqual(risk_level(61), "L3")
+        self.assertEqual(risk_level(76), "L4")
+        self.assertEqual(risk_level(91), "L5")
+
+    def test_chinese_terms_and_risk_type(self):
+        result = analyze("爆料：门店卫生糟糕，很多顾客投诉并要求退款。", reach=76000)
+        self.assertLess(result.sentiment, 0)
+        self.assertIn(result.risk_type, {"service", "reputation"})
+        self.assertGreaterEqual(result.risk_score, 60)
+
+    def test_privacy_risk_type(self):
+        self.assertEqual(risk_type("有人泄露手机号和住址，涉及隐私风险。"), "privacy")
 
 
 if __name__ == "__main__":

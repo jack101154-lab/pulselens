@@ -39,7 +39,9 @@ CREATE TABLE IF NOT EXISTS mentions (
   sentiment REAL NOT NULL DEFAULT 0,
   risk_score INTEGER NOT NULL DEFAULT 0,
   risk_level TEXT NOT NULL DEFAULT 'low',
+  risk_type TEXT NOT NULL DEFAULT 'general',
   strategy TEXT NOT NULL DEFAULT 'neutral-watch',
+  ai_summary TEXT NOT NULL DEFAULT '',
   rationale TEXT NOT NULL DEFAULT '',
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY(entity_id) REFERENCES entities(id)
@@ -61,6 +63,18 @@ def connect(db_path: Path | str = DEFAULT_DB) -> sqlite3.Connection:
 def init_db(db_path: Path | str = DEFAULT_DB) -> None:
     with connect(db_path) as conn:
         conn.executescript(SCHEMA)
+        ensure_columns(conn)
+
+
+def ensure_columns(conn: sqlite3.Connection) -> None:
+    existing = {row["name"] for row in conn.execute("PRAGMA table_info(mentions)").fetchall()}
+    migrations = {
+        "risk_type": "ALTER TABLE mentions ADD COLUMN risk_type TEXT NOT NULL DEFAULT 'general'",
+        "ai_summary": "ALTER TABLE mentions ADD COLUMN ai_summary TEXT NOT NULL DEFAULT ''",
+    }
+    for column, statement in migrations.items():
+        if column not in existing:
+            conn.execute(statement)
 
 
 def get_or_create_entity(conn: sqlite3.Connection, name: str, aliases: list[str] | None = None, description: str = "") -> int:
@@ -101,8 +115,8 @@ def add_mention(
     cur = conn.execute(
         """
         INSERT INTO mentions
-        (entity_id, source, text, url, author, published_at, reach, sentiment, risk_score, risk_level, strategy, rationale)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (entity_id, source, text, url, author, published_at, reach, sentiment, risk_score, risk_level, risk_type, strategy, ai_summary, rationale)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             entity_id,
@@ -115,7 +129,9 @@ def add_mention(
             result.sentiment,
             result.risk_score,
             result.risk_level,
+            result.risk_type,
             result.strategy,
+            result.summary,
             result.rationale,
         ),
     )
@@ -219,7 +235,7 @@ def export_csv(conn: sqlite3.Connection, output_path: Path | str) -> Path:
     rows = list_mentions(conn, limit=10000)
     fields = [
         "id", "entity_name", "source", "author", "published_at", "reach", "sentiment",
-        "risk_score", "risk_level", "strategy", "text", "url", "rationale",
+        "risk_score", "risk_level", "risk_type", "strategy", "ai_summary", "text", "url", "rationale",
     ]
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)

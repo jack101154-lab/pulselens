@@ -31,6 +31,7 @@ Codex would help maintain the project by:
 - Adding tests for scoring, imports, exports, and dashboard behavior.
 - Improving documentation for non-technical users and researchers.
 - Triaging issues and turning user feedback into focused pull requests.
+- Implementing topic clustering, L0-L5 alert workflows, and weekly public-opinion reports.
 
 ## API credit use
 
@@ -44,3 +45,15 @@ Optional API credits would be used for:
 ## Responsible-use posture
 
 PulseLens is intended for lawful monitoring of public or user-provided data. The project discourages harassment, doxxing, private surveillance, and platform terms violations.
+
+## Current MVP Scope
+
+The current open-source version intentionally focuses on a practical, runnable subset of the larger product vision:
+
+- Bring-your-own-data imports through CSV and RSS.
+- Local SQLite storage.
+- Transparent L0-L5 risk scoring.
+- Risk type classification.
+- Strategy suggestions and Markdown weekly reports.
+
+Full commercial features such as all-platform real-time collection, private chat monitoring, automatic public replies, phone alerts, legal service workflows, and private deployments are out of scope for the current open-source MVP.

@@ -20,10 +20,11 @@ Most social listening products are expensive SaaS tools. Many open-source attemp
 - **RSS import**: Pull public web feeds without relying on private social APIs.
 - **Multilingual sentiment baseline**: Includes English and Chinese lexicons for favorable, harmful, and urgent signals.
 - **Risk scoring**: Combines sentiment, reach, urgency, source weight, and keyword matches.
-- **Crisis levels**: Labels items as low, guarded, elevated, high, or critical.
+- **PRD-aligned crisis levels**: Labels items as L0-L5, from normal monitoring to major crisis.
+- **Risk type detection**: Classifies likely product, service, legal, security, privacy, or reputation risk.
 - **Response strategy**: Suggests amplify, clarify, neutral-watch, de-escalate, or crisis-response actions.
 - **Dashboard**: Local web UI for recent mentions, trend summaries, alerts, and entity-level risk.
-- **Exports**: JSON endpoint and CSV export for reporting or research workflows.
+- **Exports**: JSON endpoint, CSV export, and Markdown weekly report for reporting or research workflows.
 - **Privacy-first local storage**: SQLite database stored on your machine.
 
 ## Quick start
@@ -57,6 +58,14 @@ CSV columns can include:
 pulselens import-rss https://example.com/feed.xml --entity "Acme Cloud"
 ```
 
+## Export a Weekly Report
+
+```bash
+pulselens weekly-report --output exports/weekly-report.md
+```
+
+The report includes total mentions, L3-L5 alerts, sentiment distribution, platform distribution, risk types, priority alerts, and suggested next actions.
+
 ## Run tests
 
 ```bash
@@ -65,11 +74,34 @@ python -m unittest discover -s tests
 
 ## Roadmap
 
-- Pluggable source connectors for Mastodon, Reddit exports, GitHub issues, YouTube comments exports, and news APIs.
+PulseLens follows a staged open-source roadmap instead of trying to become a full commercial social-listening SaaS on day one.
+
+### MVP
+
+- Subject and alias configuration.
+- Bring-your-own-data imports through CSV, RSS, and manual entries.
+- L0-L5 risk scoring with transparent rationale.
+- Risk type classification and response strategy suggestions.
+- Local dashboard, CSV export, and Markdown weekly report.
+
+### Next
+
+- Topic clustering for similar public-opinion mentions.
+- Dashboard screenshots and richer README examples.
+- Expanded Chinese risk and sentiment lexicons.
+- Alert center with in-app and email notifications.
+- Lightweight response-task workflow.
+
+### Later
+
+- Pluggable lawful connectors for Mastodon, Reddit exports, GitHub issues, YouTube comments exports, and news APIs.
 - Research mode with coding sheets and inter-annotator agreement helpers.
-- Team workflow: assignment, status, response log, and postmortem templates.
 - Better multilingual models with optional local LLM or API-backed classifiers.
-- Alert destinations: email, webhook, Slack, Feishu, and DingTalk.
+- Webhook, Slack, Feishu, and DingTalk alert destinations.
+
+## Scope Boundaries
+
+PulseLens does not aim to bypass platform restrictions, scrape private chats, automate public replies, contact posters automatically, or provide legal services. The current open-source version focuses on compliant data import, transparent analysis, risk triage, and reporting.
 
 ## Responsible use
 

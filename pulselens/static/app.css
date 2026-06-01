@@ -72,6 +72,13 @@ h2 {
   background: var(--surface);
 }
 
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
 main {
   width: min(1180px, calc(100% - 32px));
   margin: 26px auto 40px;

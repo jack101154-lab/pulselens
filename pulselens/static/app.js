@@ -1,4 +1,10 @@
-const levelClass = (level) => ["low", "guarded", "elevated", "high", "critical"].includes(level) ? level : "low";
+const levelClass = (level) => {
+  const high = ["L3", "L4", "L5"];
+  const elevated = ["L2"];
+  if (high.includes(level)) return "high";
+  if (elevated.includes(level)) return "elevated";
+  return "low";
+};
 
 async function getJson(url) {
   const response = await fetch(url);
@@ -12,7 +18,7 @@ function renderEntity(entity) {
     <article class="entity">
       <header>
         <h3>${escapeHtml(entity.name)}</h3>
-        <span class="badge ${entity.max_risk >= 60 ? "high" : entity.max_risk >= 40 ? "elevated" : "low"}">${Math.round(entity.max_risk)}</span>
+        <span class="badge ${entity.max_risk >= 61 ? "high" : entity.max_risk >= 41 ? "elevated" : "low"}">${Math.round(entity.max_risk)}</span>
       </header>
       <p>${escapeHtml(entity.description || aliases)}</p>
       <div class="meta">
@@ -27,15 +33,17 @@ function renderMention(mention) {
   return `
     <article class="mention">
       <header>
-        <h3>${escapeHtml(mention.entity_name)} · ${escapeHtml(mention.source)}</h3>
+        <h3>${escapeHtml(mention.entity_name)} / ${escapeHtml(mention.source)}</h3>
         <span class="badge ${levelClass(mention.risk_level)}">${escapeHtml(mention.risk_level)} ${mention.risk_score}</span>
       </header>
       <p class="mention-text">${escapeHtml(mention.text)}</p>
       <div class="meta">
         <span>sentiment ${Number(mention.sentiment).toFixed(2)}</span>
+        <span>${escapeHtml(mention.risk_type)}</span>
         <span>reach ${mention.reach}</span>
         <span class="strategy">${escapeHtml(mention.strategy)}</span>
       </div>
+      <p>${escapeHtml(mention.ai_summary || "")}</p>
       <p>${escapeHtml(mention.rationale)}</p>
     </article>
   `;

@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 from .feeds import import_rss
+from .reports import weekly_report
 from .storage import DEFAULT_DB, add_mention, connect, get_or_create_entity, import_csv, init_db, summary
 from .web import serve
 
@@ -39,6 +40,10 @@ def main(argv: list[str] | None = None) -> int:
     rss_cmd.add_argument("--limit", type=int, default=50)
 
     sub.add_parser("summary", help="Print a JSON-like summary.")
+
+    report_cmd = sub.add_parser("weekly-report", help="Export a Markdown public-opinion weekly report.")
+    report_cmd.add_argument("--output", default="exports/weekly-report.md")
+    report_cmd.add_argument("--days", type=int, default=7)
 
     web_cmd = sub.add_parser("serve", help="Start the local dashboard.")
     web_cmd.add_argument("--host", default="127.0.0.1")
@@ -80,6 +85,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "summary":
         with connect(db_path) as conn:
             print(summary(conn))
+        return 0
+    if args.command == "weekly-report":
+        with connect(db_path) as conn:
+            path = weekly_report(conn, args.output, days=args.days)
+        print(f"Exported {path}")
         return 0
     if args.command == "serve":
         serve(args.host, args.port, db_path)

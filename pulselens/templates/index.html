@@ -7,52 +7,90 @@
     <link rel="stylesheet" href="/static/app.css">
   </head>
   <body>
-    <header class="topbar">
-      <div>
-        <p class="eyebrow">Public opinion early warning</p>
-        <h1>PulseLens</h1>
-      </div>
-      <nav class="actions" aria-label="Exports">
-        <a class="button" href="/export/mentions.csv">Export CSV</a>
-        <a class="button" href="/export/weekly-report.md">Weekly Report</a>
-      </nav>
-    </header>
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="PulseLens home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>
+            <strong>PulseLens</strong>
+            <small>Reputation risk command center</small>
+          </span>
+        </a>
+        <nav class="actions" aria-label="Exports">
+          <a class="button button-ghost" href="/export/mentions.csv">Export CSV</a>
+          <a class="button button-primary" href="/export/weekly-report.md">Weekly Report</a>
+        </nav>
+      </header>
 
-    <main>
-      <section class="metrics" aria-label="Overview">
-        <article>
-          <span>Total mentions</span>
-          <strong id="totalMentions">0</strong>
-        </article>
-        <article>
-          <span>High alerts</span>
-          <strong id="highAlerts">0</strong>
-        </article>
-        <article>
-          <span>Average risk</span>
-          <strong id="averageRisk">0</strong>
-        </article>
-      </section>
-
-      <section class="layout">
-        <aside class="panel">
-          <div class="section-title">
-            <h2>Watched entities</h2>
+      <main>
+        <section class="command-hero" aria-label="Risk overview">
+          <div class="hero-copy">
+            <p class="eyebrow">Public opinion early warning</p>
+            <h1>Monitor risk before the conversation turns.</h1>
+            <p class="hero-text">
+              Track watched subjects, detect harmful signals, assign L0-L5 risk, and export a response-ready weekly report.
+            </p>
           </div>
-          <div id="entities" class="entity-list"></div>
-        </aside>
-
-        <section class="panel">
-          <div class="section-title">
-            <h2>Priority mentions</h2>
-            <select id="entityFilter" aria-label="Filter by entity">
-              <option value="">All entities</option>
-            </select>
+          <div class="hero-panel" aria-label="Live status">
+            <span class="status-light"></span>
+            <span>Local analysis online</span>
           </div>
-          <div id="mentions" class="mention-list"></div>
         </section>
-      </section>
-    </main>
+
+        <section class="metrics" aria-label="Overview">
+          <article class="metric metric-total">
+            <span>Total mentions</span>
+            <strong id="totalMentions">0</strong>
+            <p>All monitored items in the current workspace.</p>
+          </article>
+          <article class="metric metric-alert">
+            <span>High alerts</span>
+            <strong id="highAlerts">0</strong>
+            <p>L3-L5 items that deserve human review.</p>
+          </article>
+          <article class="metric metric-risk">
+            <span>Average risk</span>
+            <strong id="averageRisk">0</strong>
+            <p>Composite score across all mentions.</p>
+          </article>
+          <article class="metric metric-mix">
+            <span>Risk mix</span>
+            <div id="riskMix" class="risk-mix"></div>
+          </article>
+        </section>
+
+        <section class="layout">
+          <aside class="panel entity-panel">
+            <div class="section-title">
+              <div>
+                <p class="section-kicker">Watchlist</p>
+                <h2>Watched entities</h2>
+              </div>
+            </div>
+            <div id="entities" class="entity-list"></div>
+          </aside>
+
+          <section class="panel mentions-panel">
+            <div class="section-title">
+              <div>
+                <p class="section-kicker">Triage queue</p>
+                <h2>Priority mentions</h2>
+              </div>
+              <select id="entityFilter" aria-label="Filter by entity">
+                <option value="">All entities</option>
+              </select>
+            </div>
+            <div id="mentions" class="mention-list"></div>
+          </section>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>Transparent local scoring</span>
+        <span>CSV, RSS, Markdown reports</span>
+        <span>Human-in-the-loop response workflow</span>
+      </footer>
+    </div>
 
     <script src="/static/app.js"></script>
   </body>

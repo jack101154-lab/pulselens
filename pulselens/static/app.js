@@ -24,17 +24,19 @@ function renderEntity(entity) {
       <div class="meta">
         <span>${entity.mentions} mentions</span>
         <span>avg risk ${Number(entity.avg_risk).toFixed(1)}</span>
+        <span>max ${Math.round(entity.max_risk)}</span>
       </div>
     </article>
   `;
 }
 
 function renderMention(mention) {
+  const score = Number(mention.risk_score || 0);
   return `
     <article class="mention">
       <header>
         <h3>${escapeHtml(mention.entity_name)} / ${escapeHtml(mention.source)}</h3>
-        <span class="badge ${levelClass(mention.risk_level)}">${escapeHtml(mention.risk_level)} ${mention.risk_score}</span>
+        <span class="badge ${levelClass(mention.risk_level)}">${escapeHtml(mention.risk_level)} ${score}</span>
       </header>
       <p class="mention-text">${escapeHtml(mention.text)}</p>
       <div class="meta">
@@ -49,6 +51,17 @@ function renderMention(mention) {
   `;
 }
 
+function renderRiskMix(levels) {
+  if (!levels || levels.length === 0) {
+    return `<span class="risk-pill">No mentions yet</span>`;
+  }
+  const order = ["L5", "L4", "L3", "L2", "L1", "L0"];
+  const sorted = [...levels].sort((a, b) => order.indexOf(a.risk_level) - order.indexOf(b.risk_level));
+  return sorted
+    .map((item) => `<span class="risk-pill">${escapeHtml(item.risk_level)} ${item.count}</span>`)
+    .join("");
+}
+
 async function refresh() {
   const [summary, entities] = await Promise.all([
     getJson("/api/summary"),
@@ -58,7 +71,10 @@ async function refresh() {
   document.querySelector("#totalMentions").textContent = summary.total_mentions;
   document.querySelector("#highAlerts").textContent = summary.high_alerts;
   document.querySelector("#averageRisk").textContent = summary.average_risk;
-  document.querySelector("#entities").innerHTML = entities.entities.map(renderEntity).join("");
+  document.querySelector("#riskMix").innerHTML = renderRiskMix(summary.levels);
+  document.querySelector("#entities").innerHTML = entities.entities.length
+    ? entities.entities.map(renderEntity).join("")
+    : `<p class="empty">No watched entities yet. Seed data or import a CSV to start monitoring.</p>`;
 
   const filter = document.querySelector("#entityFilter");
   const current = filter.value;
@@ -73,7 +89,9 @@ async function refreshMentions() {
   const filter = document.querySelector("#entityFilter");
   const suffix = filter.value ? `?entity_id=${filter.value}&limit=100` : "?limit=100";
   const data = await getJson(`/api/mentions${suffix}`);
-  document.querySelector("#mentions").innerHTML = data.mentions.map(renderMention).join("");
+  document.querySelector("#mentions").innerHTML = data.mentions.length
+    ? data.mentions.map(renderMention).join("")
+    : `<p class="empty">No priority mentions match this view.</p>`;
 }
 
 function escapeHtml(value) {

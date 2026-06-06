@@ -4,6 +4,8 @@ PulseLens is an open-source social listening and public-opinion early-warning wo
 
 It helps you monitor mentions of a person, brand, project, or organization, classify sentiment, estimate reputational risk, and generate practical response suggestions before a conversation turns into a crisis.
 
+![PulseLens dashboard preview](docs/assets/dashboard-preview.png)
+
 ## Why this project exists
 
 Most social listening products are expensive SaaS tools. Many open-source attempts depend on fragile scraping or private platform APIs. PulseLens starts from a safer and more portable foundation:
@@ -27,6 +29,16 @@ Most social listening products are expensive SaaS tools. Many open-source attemp
 - **Exports**: JSON endpoint, CSV export, and Markdown weekly report for reporting or research workflows.
 - **Privacy-first local storage**: SQLite database stored on your machine.
 
+## Dashboard Experience
+
+The PulseLens dashboard is designed as a lightweight reputation-risk command center:
+
+- A command header summarizes the active monitoring mode.
+- KPI cards show total mentions, high-risk alerts, average risk, and L0-L5 distribution.
+- The watchlist panel highlights monitored entities and their maximum risk scores.
+- The triage queue prioritizes mentions by risk score, source, risk type, and response strategy.
+- Export actions keep reporting close to the operational workflow.
+
 ## Quick start
 
 ```bash
@@ -36,6 +48,13 @@ pulselens serve
 ```
 
 Open http://127.0.0.1:8765 in your browser.
+
+On Windows, the bundled helper script can be used without configuring PATH:
+
+```powershell
+.\run-pulselens.cmd seed
+.\run-pulselens.cmd serve
+```
 
 ## Import CSV
 

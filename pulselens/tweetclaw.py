@@ -13,6 +13,14 @@ TEXT_KEYS = ("text", "full_text", "content", "body")
 URL_KEYS = ("url", "tweet_url", "link", "permalink")
 PUBLISHED_KEYS = ("published_at", "created_at", "created", "date")
 AUTHOR_KEYS = ("author", "user", "username", "screen_name", "name")
+REACH_KEYS = (
+    "view_count",
+    "viewCount",
+    "views",
+    "impression_count",
+    "impressionCount",
+    "impressions",
+)
 
 
 def import_tweetclaw_json(
@@ -90,7 +98,7 @@ def normalize_handle(value: str) -> str:
 
 
 def estimated_reach(record: dict[str, Any]) -> int:
-    for key in ("view_count", "views", "impression_count", "impressions"):
+    for key in REACH_KEYS:
         value = safe_int(record.get(key), 0)
         if value > 0:
             return value

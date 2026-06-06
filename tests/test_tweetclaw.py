@@ -68,6 +68,30 @@ class TweetClawImportTest(unittest.TestCase):
         self.assertEqual(mentions[0]["reach"], 10)
         self.assertEqual(mentions[0]["url"], "https://x.com/customer/status/456")
 
+    def test_imports_camel_case_view_count(self):
+        payload = {
+            "results": [
+                {
+                    "text": "Acme Cloud launch reached the developer crowd.",
+                    "author": "launchdesk",
+                    "viewCount": 4321,
+                }
+            ]
+        }
+        with tempfile.TemporaryDirectory(ignore_cleanup_errors=True) as tmp:
+            db_path = Path(tmp) / "pulselens.db"
+            json_path = Path(tmp) / "tweetclaw.json"
+            json_path.write_text(json.dumps(payload), encoding="utf-8")
+            init_db(db_path)
+
+            with connect(db_path) as conn:
+                count = import_tweetclaw_json(conn, json_path, "Acme Cloud")
+                mentions = list_mentions(conn)
+
+        self.assertEqual(count, 1)
+        self.assertEqual(mentions[0]["author"], "@launchdesk")
+        self.assertEqual(mentions[0]["reach"], 4321)
+
 
 if __name__ == "__main__":
     unittest.main()

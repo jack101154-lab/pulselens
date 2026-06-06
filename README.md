@@ -77,6 +77,17 @@ CSV columns can include:
 pulselens import-rss https://example.com/feed.xml --entity "Acme Cloud"
 ```
 
+## Import Reviewed TweetClaw JSON
+
+PulseLens can import reviewed TweetClaw JSON exports for X/Twitter mentions without storing API keys or calling live social APIs:
+
+```bash
+openclaw plugins install @xquik/tweetclaw
+pulselens import-tweetclaw exports/tweetclaw-search.json --entity "Acme Cloud"
+```
+
+Use TweetClaw to collect lawful, reviewed X/Twitter results such as search tweets, search tweet replies, user lookup results, follower exports, monitor evidence, or webhook events. Keep `XQUIK_API_KEY` in OpenClaw or your shell environment only. Do not paste keys into PulseLens imports, weekly reports, or dashboard notes.
+
 ## Export a Weekly Report
 
 ```bash
@@ -110,6 +121,7 @@ PulseLens follows a staged open-source roadmap instead of trying to become a ful
 - Expanded Chinese risk and sentiment lexicons.
 - Alert center with in-app and email notifications.
 - Lightweight response-task workflow.
+- Import helpers for reviewed lawful connector exports, including TweetClaw JSON.
 
 ### Later
 

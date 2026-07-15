@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .analyzer import analyze
+from .topics import cluster_mentions
 
 
 DEFAULT_DB = Path("data/pulselens.db")
@@ -196,6 +197,7 @@ def summary(conn: sqlite3.Connection) -> dict[str, Any]:
     by_strategy = conn.execute(
         "SELECT strategy, COUNT(*) AS count FROM mentions GROUP BY strategy ORDER BY count DESC"
     ).fetchall()
+    rows = list_mentions(conn, limit=10000)
     return {
         "total_mentions": total_mentions,
         "high_alerts": high_alerts,
@@ -203,6 +205,7 @@ def summary(conn: sqlite3.Connection) -> dict[str, Any]:
         "top_alerts": top,
         "levels": [dict(row) for row in by_level],
         "strategies": [dict(row) for row in by_strategy],
+        "topics": cluster_mentions(rows, limit=6),
     }
 
 

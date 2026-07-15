@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from .storage import list_mentions
+from .topics import cluster_mentions
 
 
 def weekly_report(conn, output_path: Path | str = "exports/weekly-report.md", days: int = 7) -> Path:
@@ -43,6 +44,7 @@ def render_weekly_report(rows: list[dict[str, Any]], days: int = 7) -> str:
     risk_types = Counter(row.get("risk_type") or "general" for row in rows)
     platforms = Counter(row.get("source") or "unknown" for row in rows)
     entities = Counter(row.get("entity_name") or "unknown" for row in rows)
+    topics = cluster_mentions(rows, limit=8)
 
     lines = [
         "# PulseLens Weekly Public Opinion Report",
@@ -68,6 +70,15 @@ def render_weekly_report(rows: list[dict[str, Any]], days: int = 7) -> str:
     lines.extend(counter_lines(entities))
     lines.extend(["", "## Risk Type Distribution", ""])
     lines.extend(counter_lines(risk_types))
+    lines.extend(["", "## Topic Clusters", ""])
+    if topics:
+        for topic in topics:
+            lines.append(
+                f"- {topic['topic']}: {topic['count']} mention(s), "
+                f"max risk {topic['max_risk']}, dominant type {topic['dominant_risk_type']}"
+            )
+    else:
+        lines.append("- No topic clusters detected")
     lines.extend(["", "## Priority Alerts", ""])
 
     for row in sorted(rows, key=lambda item: int(item.get("risk_score") or 0), reverse=True)[:8]:

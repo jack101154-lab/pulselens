@@ -24,6 +24,7 @@ Most social listening products are expensive SaaS tools. Many open-source attemp
 - **Risk scoring**: Combines sentiment, reach, urgency, source weight, and keyword matches.
 - **PRD-aligned crisis levels**: Labels items as L0-L5, from normal monitoring to major crisis.
 - **Risk type detection**: Classifies likely product, service, legal, security, privacy, or reputation risk.
+- **Topic clustering**: Groups similar mentions into operational themes such as service complaints, data security, product quality, legal/regulatory, and viral reputation risk.
 - **Response strategy**: Suggests amplify, clarify, neutral-watch, de-escalate, or crisis-response actions.
 - **Dashboard**: Local web UI for recent mentions, trend summaries, alerts, and entity-level risk.
 - **Exports**: JSON endpoint, CSV export, and Markdown weekly report for reporting or research workflows.
@@ -37,6 +38,7 @@ The PulseLens dashboard is designed as a lightweight reputation-risk command cen
 - KPI cards show total mentions, high-risk alerts, average risk, and L0-L5 distribution.
 - The watchlist panel highlights monitored entities and their maximum risk scores.
 - The triage queue prioritizes mentions by risk score, source, risk type, and response strategy.
+- Topic clusters help reviewers move from scattered mentions to event-like themes.
 - Export actions keep reporting close to the operational workflow.
 
 ## Quick start
@@ -105,7 +107,6 @@ PulseLens follows a staged open-source roadmap instead of trying to become a ful
 
 ### Next
 
-- Topic clustering for similar public-opinion mentions.
 - Dashboard screenshots and richer README examples.
 - Expanded Chinese risk and sentiment lexicons.
 - Alert center with in-app and email notifications.

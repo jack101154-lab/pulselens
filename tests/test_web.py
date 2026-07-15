@@ -25,8 +25,10 @@ class WebTest(unittest.TestCase):
                 base = f"http://127.0.0.1:{server.server_port}"
                 index = urllib.request.urlopen(base, timeout=5).read().decode("utf-8")
                 summary = urllib.request.urlopen(f"{base}/api/summary", timeout=5).read().decode("utf-8")
+                topics = urllib.request.urlopen(f"{base}/api/topics", timeout=5).read().decode("utf-8")
                 self.assertIn("PulseLens", index)
                 self.assertIn("total_mentions", summary)
+                self.assertIn("topics", topics)
             finally:
                 server.shutdown()
                 server.server_close()

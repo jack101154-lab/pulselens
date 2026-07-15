@@ -19,6 +19,7 @@ class ReportsTest(unittest.TestCase):
 
             content = result.read_text(encoding="utf-8")
             self.assertIn("PulseLens Weekly Public Opinion Report", content)
+            self.assertIn("Topic Clusters", content)
             self.assertIn("Priority Alerts", content)
             self.assertIn("Suggested Next Actions", content)
 

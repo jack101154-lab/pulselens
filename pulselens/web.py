@@ -10,6 +10,7 @@ from urllib.parse import parse_qs, urlparse
 from .analyzer import analyze
 from .reports import weekly_report
 from .storage import DEFAULT_DB, add_mention, connect, export_csv, get_or_create_entity, init_db, list_entities, list_mentions, summary
+from .topics import cluster_mentions
 
 
 PACKAGE_DIR = Path(__file__).parent
@@ -39,6 +40,9 @@ class PulseLensHandler(BaseHTTPRequestHandler):
             entity = query.get("entity_id", [None])[0]
             with connect(self.db_path) as conn:
                 return self.json({"mentions": list_mentions(conn, limit=limit, entity_id=int(entity) if entity else None)})
+        if parsed.path == "/api/topics":
+            with connect(self.db_path) as conn:
+                return self.json({"topics": cluster_mentions(list_mentions(conn, limit=10000), limit=12)})
         if parsed.path == "/export/mentions.csv":
             with connect(self.db_path) as conn:
                 path = export_csv(conn, Path("exports/mentions.csv"))

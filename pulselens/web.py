@@ -36,7 +36,7 @@ class PulseLensHandler(BaseHTTPRequestHandler):
                 return self.json({"entities": list_entities(conn)})
         if parsed.path == "/api/mentions":
             query = parse_qs(parsed.query)
-            limit = int(query.get("limit", ["100"])[0])
+            limit = self.bounded_int(query.get("limit", ["100"])[0], 100, 1, 10000)
             entity = query.get("entity_id", [None])[0]
             with connect(self.db_path) as conn:
                 return self.json({"mentions": list_mentions(conn, limit=limit, entity_id=int(entity) if entity else None)})
@@ -152,6 +152,10 @@ class PulseLensHandler(BaseHTTPRequestHandler):
             return int(value or default)
         except (TypeError, ValueError):
             return default
+
+    @classmethod
+    def bounded_int(cls, value: object, default: int, minimum: int, maximum: int) -> int:
+        return min(max(cls.safe_int(value, default), minimum), maximum)
 
     def serve_file(self, path: Path, content_type: str) -> None:
         if not path.exists() or not path.is_file():

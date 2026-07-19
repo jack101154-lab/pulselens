@@ -6,6 +6,7 @@ from pathlib import Path
 from .feeds import import_rss
 from .reports import weekly_report
 from .storage import DEFAULT_DB, add_mention, connect, get_or_create_entity, import_csv, init_db, summary
+from .tweetclaw import import_tweetclaw_json
 from .web import serve
 
 
@@ -38,6 +39,11 @@ def main(argv: list[str] | None = None) -> int:
     rss_cmd.add_argument("url")
     rss_cmd.add_argument("--entity", required=True)
     rss_cmd.add_argument("--limit", type=int, default=50)
+
+    tweetclaw_cmd = sub.add_parser("import-tweetclaw", help="Import reviewed TweetClaw JSON mentions.")
+    tweetclaw_cmd.add_argument("path")
+    tweetclaw_cmd.add_argument("--entity", required=True)
+    tweetclaw_cmd.add_argument("--limit", type=int, default=200)
 
     sub.add_parser("summary", help="Print a JSON-like summary.")
 
@@ -81,6 +87,11 @@ def main(argv: list[str] | None = None) -> int:
         with connect(db_path) as conn:
             count = import_rss(conn, args.url, args.entity, limit=args.limit)
         print(f"Imported {count} RSS items.")
+        return 0
+    if args.command == "import-tweetclaw":
+        with connect(db_path) as conn:
+            count = import_tweetclaw_json(conn, args.path, args.entity, limit=args.limit)
+        print(f"Imported {count} TweetClaw mentions.")
         return 0
     if args.command == "summary":
         with connect(db_path) as conn:

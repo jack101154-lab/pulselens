@@ -63,6 +63,31 @@ class WebTest(unittest.TestCase):
                 server.server_close()
                 thread.join(timeout=5)
 
+    def test_mentions_endpoint_handles_invalid_and_negative_limits(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "pulselens.db"
+            init_db(db_path)
+            seed(db_path)
+            PulseLensHandler.db_path = db_path
+            server = ThreadingHTTPServer(("127.0.0.1", 0), PulseLensHandler)
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            try:
+                base = f"http://127.0.0.1:{server.server_port}"
+                invalid = urllib.request.urlopen(
+                    f"{base}/api/mentions?limit=invalid", timeout=5
+                ).read().decode("utf-8")
+                negative = urllib.request.urlopen(
+                    f"{base}/api/mentions?limit=-5", timeout=5
+                ).read().decode("utf-8")
+
+                self.assertGreater(len(json.loads(invalid)["mentions"]), 1)
+                self.assertEqual(len(json.loads(negative)["mentions"]), 1)
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join(timeout=5)
+
 
 if __name__ == "__main__":
     unittest.main()
